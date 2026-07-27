@@ -1,29 +1,25 @@
 import { describe, expect, it } from 'vitest'
-import { screen } from '@testing-library/react'
-import { act, fireEvent, render } from '@testing-library/react'
 import { DndShowcase } from './DndShowcase'
+import { render } from 'vitest-browser-react'
+import { act, waitFor } from '@testing-library/react'
+import { userEvent } from 'vitest/browser'
 
 describe('DndShowcase', () => {
-    it('when button is dropped, it should be rendered inside the droppable area', () => {
-        render(<DndShowcase />)
-        const button = screen.getByText(/draggable button/i)
+    it('when button is dropped, it should be rendered inside the droppable area', async () => {
+        const { getByText } = await render(<DndShowcase />)
+        const button = getByText(/draggable button/i).element()
         act(() => button.focus())
 
-        fireEvent.keyDown(button, { key: ' ', code: 'Space' })
-        for (let index = 0; index < 30; index++) {
-            fireEvent.keyDown(button, {
-                key: 'ArrowDown',
-                code: 'ArrowDown',
-            })
+        await userEvent.keyboard('[Space]')
+        for (let index = 0; index < 10; index++) {
+            await userEvent.keyboard('[ArrowDown]')
         }
-        fireEvent.keyDown(button, { key: ' ', code: 'Space' })
+        await userEvent.keyboard('[Space]')
 
-        screen.debug()
+        const dropArea = getByText(/drop here/i).element()
 
-        expect(screen.queryByText(/drop here/i)).toBeInTheDocument()
-        expect(screen.queryByText(/draggable button/i)).toBeInTheDocument()
-        // expect(screen.queryByText(/drop here/i)).toContainElement(
-        //     screen.queryByText(/draggable button/i) as HTMLElement
-        // )
+        await waitFor(() => {
+            expect(dropArea).toContainAnyByText(/draggable button/i)
+        })
     })
 })
