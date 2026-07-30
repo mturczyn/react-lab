@@ -16,7 +16,7 @@ export const TanstackForm = () => {
         },
         validators: { onChange: schema },
         onSubmit: async ({ value }) =>
-            console.log('Form submitted with values:', value),
+            alert('Form submitted with values: ' + JSON.stringify(value))
     })
 
     return (

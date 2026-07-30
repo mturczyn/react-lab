@@ -29,8 +29,9 @@ export const TanstackFormWithUseAppForm = () => {
             age: 0,
         },
         validators: { onChange: schema },
-        onSubmit: async ({ value }) =>
-            console.log('Form submitted with values:', value),
+        onSubmit: async ({ value }) => {
+            alert('Form submitted with values: ' + JSON.stringify(value))
+        },
     })
 
     return (
@@ -55,7 +56,7 @@ export const TanstackFormWithUseAppForm = () => {
                     children={(field) => (
                         <>
                             <field.NumberField label="Age" />
-                            <ErrorMessage />
+                            <field.ErrorMessage />
                         </>
                     )}
                 />
